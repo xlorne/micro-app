@@ -6,13 +6,12 @@ const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPl
 const { dependencies } = require("./package.json");
 
 module.exports = {
-    mode: 'development',
-    entry: './src/entry.tsx',
+    entry: './src/index.tsx',
     devServer: {
-        port: 13000,
+        port: 8000,
     },
     resolve: {
-        extensions: ['.ts', '.tsx', '.js'],
+        extensions: ['.ts', '.tsx', '.js','jsx'],
         alias: {
             '@': path.resolve(__dirname, 'src'),
         },
@@ -51,20 +50,23 @@ module.exports = {
             ],
         }),
         new ModuleFederationPlugin({
-            name: "MircoApp",
-            filename: "remoteEntry.js",
-            exposes: {
-                "./Header": "./src/pages/header",
+            name: "MircoHome",
+            // This application named 'HeaderApp'
+            // output a js file
+            remotes: {
+                "MircoApp": "MircoApp@http://192.168.3.200:13000/remoteEntry.js",
             },
             shared: {
-                ...dependencies,
-                react: {
+                // some other dependencies
+                react: { // react
                     singleton: true,
                     requiredVersion: dependencies["react"],
+                    eager: true,
                 },
-                "react-dom": {
+                "react-dom": { // react-dom
                     singleton: true,
                     requiredVersion: dependencies["react-dom"],
+                    eager: true,
                 },
             },
         }),
