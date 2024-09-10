@@ -18,6 +18,13 @@ yarn
 yarn start
 ```
 
+* start mico-home-dynamic
+```shell
+cd mirco-home-dynamic
+yarn
+yarn start
+````
+
 ## How to build & deploy
 ```shell
 cd ./scripts
