@@ -36,3 +36,4 @@ yarn server
 ## Reference
 * [webpack5](https://webpack.js.org/)  
 * [react](https://reactjs.org/)  
+* [typescript](https://www.typescriptlang.org/)  
