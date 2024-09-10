@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+  home-nginx:
+    image: nginx:latest
+    volumes:
+      - "./home:/usr/share/nginx/html"
+    environment:
+      TZ: "Asia/Shanghai"
+    restart: always
+    ports:
+      - "18000:80"
+  app-nginx:
+    image: nginx:latest
+    volumes:
+      - "./app:/usr/share/nginx/html"
+    environment:
+      TZ: "Asia/Shanghai"
+    restart: always
+    ports:
+      - "13000:80"
