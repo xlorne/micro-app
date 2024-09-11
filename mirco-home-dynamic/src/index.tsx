@@ -1,9 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-
-import {RouterProvider} from "react-router";
-import {hashRoutes} from "./config/routes";
+import RoutesProvider from "@/config/routes";
 import {ConfigProvider} from 'antd';
 import reportWebVitals from './reportWebVitals';
 import zhCN from 'antd/locale/zh_CN';
@@ -16,7 +14,7 @@ root.render(
         locale={zhCN}
     >
         <React.StrictMode>
-            <RouterProvider router={hashRoutes}/>
+            <RoutesProvider/>
         </React.StrictMode>
     </ConfigProvider>
 );
