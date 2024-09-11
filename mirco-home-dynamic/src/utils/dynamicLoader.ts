@@ -44,12 +44,16 @@ export const loadRemoteScript = (url: string): Promise<void> => {
 export const loadFileScript = (content: string): Promise<void> => {
     return new Promise((resolve, reject) => {
         try {
-            const array = new Uint8Array(content.length);
-            for (let i = 0; i < content.length; i++) {
-                array[i] = content.charCodeAt(i);
+            try {
+                eval(content);
+            } catch (e) {
+                resolve();
+                return;
             }
-            const blob = new Blob([array], {type: 'application/javascript'});
-            const url = URL.createObjectURL(blob); // Create a Blob URL
+            const encoder = new TextEncoder();
+            const encodedContent = encoder.encode(content);
+            const blob = new Blob([encodedContent], {type: 'application/javascript'});
+            const url = URL.createObjectURL(blob);
             const script = document.createElement('script');
             script.src = url;
             script.onload = () => {
@@ -66,24 +70,39 @@ export const loadFileScript = (content: string): Promise<void> => {
 };
 
 
-export const loadZipJsFileScript = async (base64: string):Promise<void> => {
+export const loadZipJsFileScript = async (base64: string): Promise<void> => {
     return new Promise((resolve, reject) => {
         const file = base64ToBlob(base64, 'application/zip');
         if (file) {
             const zip = new JSZip();
             const content = file.arrayBuffer();
             zip.loadAsync(content).then((unzipped) => {
+                const jsFiles: { relativePath: string, content: string }[] = [];
+
+                const filePromises: Promise<void>[] = [];
                 unzipped.forEach((relativePath, file) => {
-                    if(relativePath.endsWith(".js")) {
-                        file.async('text').then((text) => {
-                            loadFileScript(text).then(()=>{
-                                console.log('load success file:', relativePath);
-                            }).catch(e=>{});
+                    if (relativePath.endsWith(".js")) {
+                        const filePromise = file.async('text').then((text) => {
+                            jsFiles.push({relativePath, content: text});
                         });
+                        filePromises.push(filePromise);
                     }
                 });
-                resolve();
-            });
+
+                Promise.all(filePromises).then(() => {
+                    jsFiles.reduce((prevPromise: any, jsFile) => {
+                        return prevPromise.then(() => {
+                            return loadFileScript(jsFile.content).then(() => {
+                                console.log('Load success file:', jsFile.relativePath);
+                            });
+                        });
+                    }, Promise.resolve()).then(() => {
+                        resolve();
+                    }).catch(reject);
+                }).catch(reject);
+            }).catch(reject);
+        } else {
+            reject(new Error('Failed to convert base64 to Blob.'));
         }
     });
 };

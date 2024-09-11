@@ -10,7 +10,6 @@ const RouteContext = createContext<any>(null);
 
 export const useRoutesContext = () => useContext(RouteContext);
 
-
 interface Router {
     path: string,
     element: React.ReactNode
@@ -71,8 +70,6 @@ const RoutesProvider: React.FC = () => {
                 });
             })
         }
-
-        // @ts-ignore
         const NewPage = lazy(async () => {
             const Component = await dynamicLoadComponent(router.remoteUrl, router.scope, router.module);
             return {default: Component};
@@ -91,7 +88,7 @@ const RoutesProvider: React.FC = () => {
     const hashRoutes = createHashRouter(routes);
 
     return (
-        <RouteContext.Provider value={{addRoute, removeRoute, addDynamicComponentRoute,addPageRoute}}>
+        <RouteContext.Provider value={{addRoute, removeRoute, addDynamicComponentRoute, addPageRoute}}>
             <RouterProvider
                 router={hashRoutes}
             />

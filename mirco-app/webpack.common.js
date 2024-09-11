@@ -27,7 +27,12 @@ module.exports = {
             },
             {
                 test: /\.(png|jpg|gif|svg)$/,
-                type: 'asset/resource',
+                type: 'asset/inline',  // 使用 'asset/inline' 将图片转为 JS 模块
+                parser: {
+                    dataUrlCondition: {
+                        maxSize: 100 * 1024,  // 超过100KB的图片将不会转为内联
+                    },
+                },
             },
         ],
     },
