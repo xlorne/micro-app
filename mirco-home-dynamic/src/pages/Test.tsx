@@ -1,6 +1,5 @@
 import React, {Suspense, useState} from 'react';
-import {Button} from "antd";
-import {ModalForm, ProForm, ProFormText} from "@ant-design/pro-components";
+import {Button, Form, Input, Modal} from "antd";
 import {loadRemoteComponent, loadRemoteScript} from '@/utils/dynamicLoader';
 
 const Test = () => {
@@ -9,7 +8,7 @@ const Test = () => {
 
     const [visible, setVisible] = useState(false);
 
-    const [form] = ProForm.useForm();
+    const [form] = Form.useForm();
 
     const handlerLoadComponent = async (values: any) => {
         const {remoteUrl, scope, module} = values;
@@ -17,10 +16,13 @@ const Test = () => {
             loadRemoteScript(remoteUrl).then(async () => {
                 const ComponentModule = await loadRemoteComponent(scope, module);
                 const Component = ComponentModule.default || ComponentModule;
+                console.log('ComponentModule:', ComponentModule);
                 setRemoteTestComponent(() => Component);
             })
         } catch (error) {
             console.error('Error loading remote component:', error);
+        }finally {
+            setVisible(false);
         }
     }
 
@@ -33,66 +35,70 @@ const Test = () => {
             )}
 
             <Button
-                onClick={()=>{
+                onClick={() => {
                     form.setFieldsValue({
                         remoteUrl: "http://localhost:3000/remoteEntry.js",
-                        scope: "MicroApp",
+                        scope: "MircoApp",
                         module: "./Header"
                     })
                     setVisible(true);
                 }}
-            >load component</Button>
-            <ModalForm
+            >dynamic load component</Button>
+
+            <Modal
                 title={"load component form"}
                 open={visible}
-                form={form}
-                modalProps={{
-                    onCancel: () => {
-                        setVisible(false);
-                    },
-                    destroyOnClose: true,
-                    onClose: () => {
-                        setVisible(false);
-                    }
+                onCancel={() => {
+                    setVisible(false);
                 }}
-                onFinish={async (values:any) => {
-                    await handlerLoadComponent(values);
+                onOk={() => {
+                    form.submit();
                 }}
             >
-                <ProFormText
-                    label={"remoteUrl"}
-                    name={"remoteUrl"}
-                    rules={[
-                        {
-                            required: true,
-                            message: "remoteUrl is required"
-                        }
-                    ]}
-                />
+                <Form
+                    form={form}
+                    onFinish={handlerLoadComponent}
+                >
+                    <Form.Item
+                        label={"remoteUrl"}
+                        name={"remoteUrl"}
+                        rules={[
+                            {
+                                required: true,
+                                message: "remoteUrl is required"
+                            }
+                        ]}
+                    >
+                        <Input/>
+                    </Form.Item>
 
-                <ProFormText
-                    label={"scope"}
-                    name={"scope"}
-                    rules={[
-                        {
-                            required: true,
-                            message: "scope is required"
-                        }
-                    ]}
-                />
+                    <Form.Item
+                        label={"scope"}
+                        name={"scope"}
+                        rules={[
+                            {
+                                required: true,
+                                message: "scope is required"
+                            }
+                        ]}
+                    >
+                        <Input/>
+                    </Form.Item>
 
-                <ProFormText
-                    label={"module"}
-                    name={"module"}
-                    rules={[
-                        {
-                            required: true,
-                            message: "module is required"
-                        }
-                    ]}
-                />
-
-            </ModalForm>
+                    <Form.Item
+                        label={"module"}
+                        name={"module"}
+                        rules={[
+                            {
+                                required: true,
+                                message: "module is required"
+                            }
+                        ]}
+                    >
+                        <Input/>
+                    </Form.Item>
+                </Form>
+            </Modal>
 
         </>
     )

@@ -19,3 +19,12 @@ services:
     restart: always
     ports:
       - "13000:80"
+  dynamic-nginx:
+    image: nginx:latest
+    volumes:
+      - "./dynamic:/usr/share/nginx/html"
+    environment:
+      TZ: "Asia/Shanghai"
+    restart: always
+    ports:
+      - "19000:80"

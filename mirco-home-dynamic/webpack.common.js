@@ -2,6 +2,8 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
+const {dependencies} = require("./package.json");
 
 module.exports = {
     entry: './src/index.tsx',
@@ -46,6 +48,23 @@ module.exports = {
                     },
                 }
             ],
+        }),
+        new ModuleFederationPlugin({
+            name: "MircoHome",
+
+            shared: {
+                // some other dependencies
+                react: { // react
+                    singleton: true,
+                    requiredVersion: dependencies["react"],
+                    eager: true,
+                },
+                "react-dom": { // react-dom
+                    singleton: true,
+                    requiredVersion: dependencies["react-dom"],
+                    eager: true,
+                },
+            },
         }),
     ],
     output: {
