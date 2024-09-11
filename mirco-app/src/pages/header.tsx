@@ -1,5 +1,6 @@
 import React from "react";
 import {Image} from "antd";
+import apple from "@/assets/apple.jpg";
 
 const Header = ()=>{
     return (
@@ -10,7 +11,7 @@ const Header = ()=>{
             flexDirection: "column",
         }}>
             <h1>Header</h1>
-            <Image src={"/logo.png"}/>
+            <Image src={apple}/>
         </div>
     )
 }
