@@ -1,6 +1,7 @@
 import React, {Suspense, useState} from 'react';
-import {Button, Form, Input, Modal} from "antd";
+import {Button} from "antd";
 import {loadRemoteComponent, loadRemoteScript} from '@/utils/dynamicLoader';
+import {ModalForm, ProForm, ProFormText} from "@ant-design/pro-components";
 
 const Test = () => {
 
@@ -8,7 +9,7 @@ const Test = () => {
 
     const [visible, setVisible] = useState(false);
 
-    const [form] = Form.useForm();
+    const [form] = ProForm.useForm();
 
     const handlerLoadComponent = async (values: any) => {
         const {remoteUrl, scope, module} = values;
@@ -21,7 +22,7 @@ const Test = () => {
             })
         } catch (error) {
             console.error('Error loading remote component:', error);
-        }finally {
+        } finally {
             setVisible(false);
         }
     }
@@ -34,6 +35,7 @@ const Test = () => {
                 </Suspense>
             )}
 
+
             <Button
                 onClick={() => {
                     form.setFieldsValue({
@@ -45,60 +47,52 @@ const Test = () => {
                 }}
             >dynamic load component</Button>
 
-            <Modal
+            <ModalForm
                 title={"load component form"}
                 open={visible}
-                onCancel={() => {
-                    setVisible(false);
+                form={form}
+                modalProps={{
+                    onCancel: () => {
+                        setVisible(false);
+                    },
+                    destroyOnClose: true
                 }}
-                onOk={() => {
-                    form.submit();
-                }}
+                onFinish={handlerLoadComponent}
             >
-                <Form
-                    form={form}
-                    onFinish={handlerLoadComponent}
-                >
-                    <Form.Item
-                        label={"remoteUrl"}
-                        name={"remoteUrl"}
-                        rules={[
-                            {
-                                required: true,
-                                message: "remoteUrl is required"
-                            }
-                        ]}
-                    >
-                        <Input/>
-                    </Form.Item>
+                <ProFormText
+                    label={"remoteUrl"}
+                    name={"remoteUrl"}
+                    rules={[
+                        {
+                            required: true,
+                            message: "remoteUrl is required"
+                        }
+                    ]}
+                />
 
-                    <Form.Item
-                        label={"scope"}
-                        name={"scope"}
-                        rules={[
-                            {
-                                required: true,
-                                message: "scope is required"
-                            }
-                        ]}
-                    >
-                        <Input/>
-                    </Form.Item>
+                <ProFormText
+                    label={"scope"}
+                    name={"scope"}
+                    rules={[
+                        {
+                            required: true,
+                            message: "scope is required"
+                        }
+                    ]}
+                />
 
-                    <Form.Item
-                        label={"module"}
-                        name={"module"}
-                        rules={[
-                            {
-                                required: true,
-                                message: "module is required"
-                            }
-                        ]}
-                    >
-                        <Input/>
-                    </Form.Item>
-                </Form>
-            </Modal>
+                <ProFormText
+                    label={"module"}
+                    name={"module"}
+                    rules={[
+                        {
+                            required: true,
+                            message: "module is required"
+                        }
+                    ]}
+                />
+
+            </ModalForm>
 
         </>
     )
