@@ -11,9 +11,18 @@ const Index = () => {
     }
 
     return (
-        <div>
-            Index
-            <Button onClick={handlerTest}>test</Button>
+        <div
+            style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh',
+                flexDirection: 'column',
+                gap: '50px',
+            }}
+        >
+            Index Page
+            <Button onClick={handlerTest}>go component</Button>
         </div>
     )
 }

@@ -10,8 +10,14 @@ const Header = ()=>{
             alignItems: "center",
             flexDirection: "column",
         }}>
-            <h1>Header</h1>
-            <Image src={apple}/>
+            <h1>Header Component</h1>
+
+            <Image
+                style={{
+                    margin:10
+                }}
+                src={apple}
+            />
         </div>
     )
 }

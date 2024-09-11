@@ -16,7 +16,7 @@ const Hello = () => {
         const base64 = values.component;
         const scope = values.scope;
         const module = values.module;
-        loadZipJsFileScript(base64).then(()=>{
+        loadZipJsFileScript(base64).then(() => {
             loadRemoteComponent(scope, module).then((ComponentModule: any) => {
                 const Component = ComponentModule.default || ComponentModule;
                 setRemoteTestComponent(() => Component);
@@ -26,7 +26,16 @@ const Hello = () => {
     }
 
     return (
-        <div>
+        <div
+            style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh',
+                flexDirection: 'column',
+                gap: '50px',
+            }}
+        >
             Hello Page
 
             {RemoteTestComponent && (
@@ -34,7 +43,6 @@ const Hello = () => {
                     <RemoteTestComponent/>
                 </Suspense>
             )}
-
             <Button
                 onClick={() => {
                     setVisible(true);
@@ -81,12 +89,12 @@ const Hello = () => {
                 />
 
                 <ProFormUploader
-                    label={"upload component zip"}
+                    label={"component zip file"}
                     name={"upload"}
                     max={1}
                     accept={".zip"}
                     onChange={({file}) => {
-                        if(file.response){
+                        if (file.response) {
                             form.setFieldValue('component', file.response);
                         }
                     }}

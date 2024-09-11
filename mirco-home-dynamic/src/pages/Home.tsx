@@ -1,6 +1,6 @@
 import React from "react";
 import {useNavigate} from "react-router";
-import {Button} from "antd";
+import {Button, Space} from "antd";
 import {useRoutesContext} from "@/config/routes";
 
 
@@ -49,15 +49,21 @@ const Home = () => {
             }}
         >
             Home Page
-            <Button onClick={handlerDynamic}>dynamic</Button>
+            <Button onClick={handlerDynamic}>load remote component</Button>
 
-            <Button onClick={handlerAddHello}>add Hello page </Button>
+            <Space>
+                <Button onClick={handlerAddHello}>dynamic add hello page </Button>
 
-            <Button onClick={handlerAddDynamicHello}>add Dynamic Hello page </Button>
+                <Button onClick={handlerAddDynamicHello}>dynamic add remote component to hello page </Button>
+            </Space>
 
-            <Button onClick={handlerGo}>go Hello</Button>
+            <Space>
 
-            <Button onClick={handlerRemoveHello}>remove Hello</Button>
+                <Button onClick={handlerGo}>go hello page</Button>
+
+                <Button onClick={handlerRemoveHello}>remove hello page</Button>
+            </Space>
+
         </div>
     )
 }

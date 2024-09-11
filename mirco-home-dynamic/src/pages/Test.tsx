@@ -23,7 +23,16 @@ const Test = () => {
     }
 
     return (
-        <>
+        <div
+            style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh',
+                flexDirection: 'column',
+                gap: '50px',
+            }}
+        >
             {RemoteTestComponent && (
                 <Suspense fallback={<div>Loading Header...</div>}>
                     <RemoteTestComponent/>
@@ -39,10 +48,10 @@ const Test = () => {
                     })
                     setVisible(true);
                 }}
-            >dynamic load component</Button>
+            >load remote component</Button>
 
             <ModalForm
-                title={"load component form"}
+                title={"load remote component"}
                 open={visible}
                 form={form}
                 modalProps={{
@@ -90,7 +99,7 @@ const Test = () => {
 
             </ModalForm>
 
-        </>
+        </div>
     )
 }
 
