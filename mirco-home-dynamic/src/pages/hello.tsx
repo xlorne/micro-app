@@ -1,6 +1,6 @@
 import React, {Suspense, useState} from "react";
 import {Button} from "antd";
-import {ModalForm} from "@ant-design/pro-components";
+import {ModalForm, ProForm, ProFormText} from "@ant-design/pro-components";
 import ProFormUploader from "@/components/ProFormUploader";
 import {loadRemoteComponent, loadZipJsFileScript} from "@/utils/dynamicLoader";
 
@@ -10,10 +10,12 @@ const Hello = () => {
     const [RemoteTestComponent, setRemoteTestComponent] = useState<React.ComponentType | null>(null);
     const [visible, setVisible] = useState(false);
 
+    const [form] = ProForm.useForm();
+
     const handlerLoadComponent = async (values: any) => {
-        const base64 = values.upload[0].response;
-        const scope = 'MircoApp';
-        const module = './Header';
+        const base64 = values.component;
+        const scope = values.scope;
+        const module = values.module;
         loadZipJsFileScript(base64).then(()=>{
             loadRemoteComponent(scope, module).then((ComponentModule: any) => {
                 const Component = ComponentModule.default || ComponentModule;
@@ -37,9 +39,10 @@ const Hello = () => {
                 onClick={() => {
                     setVisible(true);
                 }}
-            >upload component</Button>
+            >upload zip component</Button>
 
             <ModalForm
+                form={form}
                 title={"upload component"}
                 open={visible}
                 modalProps={{
@@ -50,12 +53,51 @@ const Hello = () => {
                 }}
                 onFinish={handlerLoadComponent}
             >
+                <ProFormText
+                    name={"component"}
+                    hidden={true}
+                />
+
+                <ProFormText
+                    name={"scope"}
+                    label={"scope"}
+                    rules={[
+                        {
+                            required: true,
+                            message: "scope is required"
+                        }
+                    ]}
+                />
+
+                <ProFormText
+                    name={"module"}
+                    label={"module"}
+                    rules={[
+                        {
+                            required: true,
+                            message: "module is required"
+                        }
+                    ]}
+                />
+
                 <ProFormUploader
-                    label={"upload"}
+                    label={"upload component zip"}
                     name={"upload"}
                     max={1}
                     accept={".zip"}
+                    onChange={({file}) => {
+                        if(file.response){
+                            form.setFieldValue('component', file.response);
+                        }
+                    }}
+                    rules={[
+                        {
+                            required: true,
+                            message: "upload zip file"
+                        }
+                    ]}
                 />
+
             </ModalForm>
         </div>
     )
