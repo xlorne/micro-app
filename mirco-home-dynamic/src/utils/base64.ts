@@ -1,3 +1,15 @@
+import {RcFile} from "antd/es/upload";
+
+export const rcFileToBase64 = (file: RcFile): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = error => reject(error);
+    });
+}
+
+
 export const base64ToBlob = (base64: string, type: string) => {
     const binStr = atob(base64.split(',')[1]);
     const len = binStr.length;
