@@ -13,18 +13,13 @@ const Test = () => {
 
     const handlerLoadComponent = async (values: any) => {
         const {remoteUrl, scope, module} = values;
-        try {
-            loadRemoteScript(remoteUrl).then(async () => {
-                const ComponentModule = await loadRemoteComponent(scope, module);
+        loadRemoteScript(remoteUrl).then(() => {
+            loadRemoteComponent(scope, module).then((ComponentModule: any) => {
                 const Component = ComponentModule.default || ComponentModule;
-                console.log('ComponentModule:', ComponentModule);
                 setRemoteTestComponent(() => Component);
-            })
-        } catch (error) {
-            console.error('Error loading remote component:', error);
-        } finally {
-            setVisible(false);
-        }
+            });
+        }).catch(ignore => {});
+        setVisible(false);
     }
 
     return (
@@ -34,7 +29,6 @@ const Test = () => {
                     <RemoteTestComponent/>
                 </Suspense>
             )}
-
 
             <Button
                 onClick={() => {
@@ -59,6 +53,8 @@ const Test = () => {
                 }}
                 onFinish={handlerLoadComponent}
             >
+
+
                 <ProFormText
                     label={"remoteUrl"}
                     name={"remoteUrl"}
