@@ -4,19 +4,25 @@ import Home from '@/pages/Home';
 import Test from '@/pages/Test';
 import NotFount from '@/pages/NotFount';
 import {loadRemoteComponent, loadRemoteScript} from "@/utils/dynamicLoader";
+import {loadPage} from "@/config/PageLoader";
 
 const RouteContext = createContext<any>(null);
 
 export const useRoutesContext = () => useContext(RouteContext);
 
 
-interface Router{
-    path:string,
-    element:React.ReactNode
+interface Router {
+    path: string,
+    element: React.ReactNode
 }
 
-interface DynamicComponentRouter{
-    path:string,
+interface PageRouter {
+    path: string,
+    pageName: string
+}
+
+interface DynamicComponentRouter {
+    path: string,
     remoteUrl: string,
     scope: string,
     module: string
@@ -46,7 +52,15 @@ const RoutesProvider: React.FC = () => {
         setRoutes((prevRoutes) => prevRoutes.filter(route => route.path !== path));
     };
 
-    const addDynamicComponentRoute = (router:DynamicComponentRouter) => {
+    const addPageRoute = (router: PageRouter) => {
+        const newRoute = {
+            path: router.path,
+            element: loadPage(router.pageName),
+        };
+        addRoute(newRoute);
+    }
+
+    const addDynamicComponentRoute = (router: DynamicComponentRouter) => {
         const dynamicLoadComponent = (remoteUrl: string, scope: string, module: string): Promise<React.ComponentType<any>> => {
             return new Promise((resolve, reject) => {
                 loadRemoteScript(remoteUrl).then(() => {
@@ -61,7 +75,7 @@ const RoutesProvider: React.FC = () => {
         // @ts-ignore
         const NewPage = lazy(async () => {
             const Component = await dynamicLoadComponent(router.remoteUrl, router.scope, router.module);
-            return { default: Component };
+            return {default: Component};
         });
         const newRoute = {
             path: router.path,
@@ -77,7 +91,7 @@ const RoutesProvider: React.FC = () => {
     const hashRoutes = createHashRouter(routes);
 
     return (
-        <RouteContext.Provider value={{addRoute,removeRoute,addDynamicComponentRoute}}>
+        <RouteContext.Provider value={{addRoute, removeRoute, addDynamicComponentRoute,addPageRoute}}>
             <RouterProvider
                 router={hashRoutes}
             />

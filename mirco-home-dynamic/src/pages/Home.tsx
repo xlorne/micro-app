@@ -1,4 +1,4 @@
-import React, {lazy, Suspense} from "react";
+import React from "react";
 import {useNavigate} from "react-router";
 import {Button} from "antd";
 import {useRoutesContext} from "@/config/routes";
@@ -7,7 +7,7 @@ import {useRoutesContext} from "@/config/routes";
 const Home = () => {
     const navigate = useNavigate();
 
-    const {addRoute, removeRoute, addDynamicComponentRoute} = useRoutesContext();
+    const {removeRoute, addDynamicComponentRoute, addPageRoute} = useRoutesContext();
 
     const handlerDynamic = () => {
         navigate('/test');
@@ -22,18 +22,10 @@ const Home = () => {
     }
 
     const handlerAddHello = () => {
-        const NewPage = lazy(async () => {
-            return import('@/pages/hello');
-        });
-        const newRoute = {
+        addPageRoute({
             path: '/hello',
-            element: (
-                <Suspense fallback={"loading"}>
-                    <NewPage/>
-                </Suspense>
-            ),
-        };
-        addRoute(newRoute);
+            pageName: 'hello'
+        });
     }
 
     const handlerAddDynamicHello = () => {
