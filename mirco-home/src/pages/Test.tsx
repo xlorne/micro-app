@@ -1,7 +1,7 @@
 import React, {FC, lazy, Suspense} from 'react';
 
 // @ts-ignore
-const Header: FC = lazy(() => import('MircoApp/Header'));
+const Header: FC<any> = lazy(() => import('MircoApp/Header'));
 
 const Test1 = () => {
     return (
@@ -16,7 +16,9 @@ const Test1 = () => {
             <h1>Load Remote Component Page</h1>
 
             <Suspense fallback={<div>Loading Header...</div>}>
-                <Header/>
+                <Header title={"Remote Component Header"} onClick={()=>{
+                    alert('click')
+                }}/>
             </Suspense>
         </div>
     )

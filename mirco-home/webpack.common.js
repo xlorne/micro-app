@@ -49,27 +49,6 @@ module.exports = {
                 }
             ],
         }),
-        new ModuleFederationPlugin({
-            name: "MircoHome",
-            // This application named 'HeaderApp'
-            // output a js file
-            remotes: {
-                "MircoApp": "MircoApp@http://192.168.3.200:13000/remoteEntry.js",
-            },
-            shared: {
-                // some other dependencies
-                react: { // react
-                    singleton: true,
-                    requiredVersion: dependencies["react"],
-                    eager: true,
-                },
-                "react-dom": { // react-dom
-                    singleton: true,
-                    requiredVersion: dependencies["react-dom"],
-                    eager: true,
-                },
-            },
-        }),
     ],
     output: {
         filename: 'bundle.js',

@@ -7,7 +7,7 @@ import {loadRemoteComponent, loadZipJsFileScript} from "@/utils/dynamicLoader";
 
 const Hello = () => {
 
-    const [RemoteTestComponent, setRemoteTestComponent] = useState<React.ComponentType | null>(null);
+    const [RemoteTestComponent, setRemoteTestComponent] = useState<React.ComponentType<any> | null>(null);
     const [visible, setVisible] = useState(false);
 
     const [form] = ProForm.useForm();
@@ -40,7 +40,9 @@ const Hello = () => {
 
             {RemoteTestComponent && (
                 <Suspense fallback={<div>Loading Header...</div>}>
-                    <RemoteTestComponent/>
+                    <RemoteTestComponent title={"Remote Component Header"} onClick={()=>{
+                        alert('click');
+                    }}/>
                 </Suspense>
             )}
             <Button

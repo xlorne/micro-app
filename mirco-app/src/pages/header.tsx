@@ -1,8 +1,22 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Image} from "antd";
 import apple from "@/assets/apple.jpg";
 
-const Header = ()=>{
+
+interface HeaderProps {
+    title?:string,
+    onClick?: () => void;
+}
+
+const Header: React.FC<HeaderProps> = (props) => {
+    const [title,setTitle] = React.useState<string>('Header Component');
+
+    useEffect(() => {
+        if(props.title){
+            setTitle(props.title);
+        }
+    }, [props.title]);
+
     return (
         <div style={{
             display: "flex",
@@ -10,13 +24,19 @@ const Header = ()=>{
             alignItems: "center",
             flexDirection: "column",
         }}>
-            <h1>Header Component</h1>
+            <h1>{title}</h1>
 
             <Image
                 style={{
-                    margin:10
+                    margin: 10
                 }}
                 src={apple}
+                preview={!props.onClick}
+                onClick={() => {
+                    if (props.onClick) {
+                        props.onClick();
+                    }
+                }}
             />
         </div>
     )
